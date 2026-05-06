@@ -1,4 +1,7 @@
 * Generated Inverter Netlist
+* put suitable commands for better understanding of the circuit and its parameters
+
+
 .include 45nm_HP.pm
 .param vdd_val=1.2999999999999998
 .param cload_val=5e-14
@@ -15,3 +18,4 @@ Vin in 0 PULSE(0 {vdd_val} 0 {slew_val} {slew_val} 1n 2n)
 .tran 0 4n 0 1p
 .measure tran avg_pwr AVG I(Vdd)*V(vdd) FROM=1n TO=3n
 .end
+
