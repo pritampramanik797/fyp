@@ -18,7 +18,7 @@ if not Path(LTSPICE_PATH).exists():
     raise FileNotFoundError(f"LTspice not found: {LTSPICE_PATH}")
 
 # --- Feature Ranges (Exactly 5,040 combinations) ---
-vdd_range = np.arange(0.7, 1.3, 0.1)      # 6 steps
+vdd_range = np.arange(0.7, 1.3, 0.1)      # 6 steps (0.7V to 1.2V)
 cload_range = np.linspace(1e-15, 50e-15, 12) # 12 steps (1fF to 50fF)
 slew_range = [10e-12, 50e-12, 100e-12, 200e-12, 400e-12] # 5 steps
 temp_range = [-40, -25, 0, 25, 75, 100, 125]  # 7 steps (expanded)

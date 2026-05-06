@@ -1,38 +1,28 @@
-* CMOS 2-Input NOR Gate - 45nm HP Standardized
+* Generated NOR2 Netlist
 .include 45nm_HP.pm
+.param vdd_val=1.2999999999999998
+.param cload_val=5e-14
+.param slew_val=4e-10
+.param temp_val=125
+.param wn=90n
+.param wp=3.6e-07
 
-* --- PARAMETERS (Keep these identical to your Inverter) ---
-.param Vsupply = 1.0
-.param Cload   = 2fF
-.param Slew    = 0.1ns
-.param Temp    = 27
-.param Wp      = 180n
-.param Wn      = 90n
-.param Lmin    = 45n
+* Power Supply
+Vdd vdd 0 {vdd_val}
 
-* --- Global Settings ---
-.temp {Temp}
-Vdd VDD 0 {Vsupply}
+* Inputs (Offset to test all transitions: 00, 01, 11, 10)
+Va a 0 PULSE(0 {vdd_val} 0 {slew_val} {slew_val} 1n 2n)
+Vb b 0 PULSE(0 {vdd_val} 0 {slew_val} {slew_val} 2n 4n)
 
-* --- Input Signals (Using Slew parameter) ---
-Va A 0 PULSE(0 {Vsupply} 2ns {Slew} {Slew} 10ns 20ns)
-Vb B 0 PULSE(0 {Vsupply} 2ns {Slew} {Slew} 20ns 40ns)
+* NOR2 Topology
+M1 int a vdd vdd pmos W={wp} L=45n
+M2 out b int vdd pmos W={wp} L=45n
+M3 out a 0   0   nmos W={wn} L=45n
+M4 out b 0   0   nmos W={wn} L=45n
 
-* --- Pull-Up Network (Series) ---
-M1 Internal A VDD VDD pmos W={Wp} L={Lmin}
-M2 Out      B Internal VDD pmos W={Wp} L={Lmin}
+CL out 0 {cload_val}
 
-* --- Pull-Down Network (Parallel) ---
-M3 Out A 0 0 nmos W={Wn} L={Lmin}
-M4 Out B 0 0 nmos W={Wn} L={Lmin}
-
-* --- Load ---
-C1 Out 0 {Cload}
-
-* --- Analysis ---
-.tran 0.01ns 80ns
-
-* --- Measurements (Power Parameter Extraction) ---
-.measure tran Power AVG -I(Vdd) FROM=0ns TO=80ns
-
+.temp {temp_val}
+.tran 0 8n 0 1p
+.measure tran avg_pwr AVG -I(Vdd)*{vdd_val} FROM=1n TO=7n
 .end
