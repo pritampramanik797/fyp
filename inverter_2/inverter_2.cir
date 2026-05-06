@@ -1,0 +1,17 @@
+* Generated Inverter Netlist
+.include 45nm_HP.pm
+.param vdd_val=1.2999999999999998
+.param cload_val=5e-14
+.param slew_val=4e-10
+.param temp_val=125
+.param wn=90n
+.param wp=3.6e-07
+M1 out in vdd vdd pmos W={wp} L=45n
+M2 out in 0 0 nmos W={wn} L=45n
+CL out 0 {cload_val}
+Vdd vdd 0 {vdd_val}
+Vin in 0 PULSE(0 {vdd_val} 0 {slew_val} {slew_val} 1n 2n)
+.temp {temp_val}
+.tran 0 4n 0 1p
+.measure tran avg_pwr AVG I(Vdd)*V(vdd) FROM=1n TO=3n
+.end
