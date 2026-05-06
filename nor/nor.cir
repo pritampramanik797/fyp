@@ -1,36 +1,34 @@
-* 2-Input CMOS NOR Gate Simulation
-.include 45nm_HP.pm
+* CMOS 2-Input NOR Gate Simulation
+.include ptm_models.txt  * Ensure you have your transistor model file here
 
-* Dataset Features (Script will overwrite these)
-.param vdd_val = 1.0
-.param temp_val = 27
-.param slew_val = 50p
-.param cap_val = 10f
+* Power Supply
+Vdd VDD 0 1.8V
 
-* Environment
-.temp {temp_val}
-Vdd vdd 0 {vdd_val}
+* Inputs (Pulse signals for testing transitions)
+* Format: Pulse(Vlow Vhigh Delay Rise Fall Width Period)
+Va A 0 PULSE(0 1.8 1ns 0.1ns 0.1ns 10ns 20ns)
+Vb B 0 PULSE(0 1.8 5ns 0.1ns 0.1ns 10ns 40ns)
 
-* Inputs
-Va inA 0 PULSE(0 {vdd_val} 1n {slew_val} {slew_val} 5n 10n)
-Vb inB 0 PULSE(0 {vdd_val} 1n {slew_val} {slew_val} 8n 16n)
+* Pull-Up Network (PMOS in Series)
+* Syntax: Mname Drain Gate Source Bulk Model W L
+M1 Int  A VDD VDD PMOS W=2u L=0.18u
+M2 Out  B Int VDD PMOS W=2u L=0.18u
 
-* NOR Gate - PMOS Series Stack
-M1 net1 inA vdd vdd pmos W=180n L=45n
-M2 out  inB net1 vdd pmos W=180n L=45n
+* Pull-Down Network (NMOS in Parallel)
+M3 Out  A 0   0   NMOS W=1u L=0.18u
+M4 Out  B 0   0   NMOS W=1u L=0.18u
 
-* NOR Gate - NMOS Parallel Stack
-M3 out  inA 0   0   nmos W=90n L=45n
-M4 out  inB 0   0   nmos W=90n L=45n
-
-* Load
-C1 out 0 {cap_val}
+* Load Capacitance (Crucial for ML Power Estimation)
+CLoad Out 0 10fF
 
 * Analysis
-.tran 0.1n 40n
+.tran 0.1ns 80ns
 
-* Data Extraction (Labels for ML)
-.measure tran avg_power AVG I(Vdd)*V(Vdd)
-.measure tran p_static FIND (I(Vdd)*V(Vdd)) AT=0.5n
+* Measurements for Power (Instantaneous Power: Vdd * I_Vdd)
+.measure tran avg_power avg "I(Vdd)*1.8" from=0ns to=80ns
 
+.control
+run
+plot V(A) V(B) V(Out)
+.endc
 .end
