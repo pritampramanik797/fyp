@@ -1,0 +1,24 @@
+Circuit: * Diagnostic Test - Failed Iteration
+
+Direct Newton iteration for .op point succeeded.
+
+power: AVG(-i(vdd)* 0.8)=3.87276e-008 FROM 0 TO 8e-008
+
+
+Date: Thu May 07 18:00:05 2026
+Total elapsed time: 0.048 seconds.
+
+tnom = 27
+temp = -40
+method = modified trap
+totiter = 2357
+traniter = 2346
+tranpoints = 1034
+accept = 974
+rejected = 60
+matrix size = 24
+fillins = 0
+solver = Normal
+Matrix Compiler1: 2.18 KB object code size  0.5/0.2/[0.2]
+Matrix Compiler2: 2.69 KB object code size  0.2/0.2/[0.2]
+

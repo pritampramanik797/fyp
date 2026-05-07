@@ -1,11 +1,11 @@
-* Generated NAND2 Netlist (Retry)
+* Generated NAND2 Netlist (Failed Iteration 351)
 .include 45nm_HP.pm
-.param vdd_val=1.2999999999999998
-.param cload_val=5e-14
-.param slew_val=4e-10
-.param temp_val=125
+.param vdd_val=0.7
+.param cload_val=2.327272727272727e-14
+.param slew_val=1e-11
+.param temp_val=-40
 .param wn=90n
-.param wp=3.6e-07
+.param wp=1.8e-07
 
 Vdd vdd 0 {vdd_val}
 
