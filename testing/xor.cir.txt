@@ -1,0 +1,44 @@
+* 45nm CMOS XOR Gate Netlist
+.include 45nm_HP.pm
+
+* Power Supply - 45nm HP typically operates at 1.0V to 1.1V
+Vdd VDD 0 1.0V
+Vss VSS 0 0V
+
+* Inputs (Faster switching for 45nm)
+VinA A 0 PULSE(0 1.0 0 50p 50p 5n 10n)
+VinB B 0 PULSE(0 1.0 0 50p 50p 10n 20n)
+
+* --- Inverter for A ---
+M1 A_bar A VDD VDD pmos W=180n L=45n
+M2 A_bar A VSS VSS nmos W=90n L=45n
+
+* --- Inverter for B ---
+M3 B_bar B VDD VDD pmos W=180n L=45n
+M4 B_bar B VSS VSS nmos W=90n L=45n
+
+* --- XOR Logic Core (12T) ---
+M5 N1 A VDD VDD pmos W=180n L=45n
+M6 OUT B N1 VDD pmos W=180n L=45n
+M7 N2 A_bar VDD VDD pmos W=180n L=45n
+M8 OUT B_bar N2 VDD pmos W=180n L=45n
+
+M9 OUT A N3 VSS nmos W=90n L=45n
+M10 N3 B_bar VSS VSS nmos W=90n L=45n
+M11 OUT A_bar N4 VSS nmos W=90n L=45n
+M12 N4 B VSS VSS nmos W=90n L=45n
+
+* Load Capacitance (Crucial for 45nm simulation)
+CLoad OUT 0 5fF
+
+* --- Simulation Settings ---
+.tran 10p 40n
+
+* --- Power Measurement ---
+.measure tran avg_pwr avg @Vdd[i]*V(Vdd)
+
+.control
+run
+plot V(A) V(B) V(OUT)
+.endc
+.end

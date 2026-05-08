@@ -1,0 +1,41 @@
+* 45nm XOR Gate - Missing Node Fix
+.include 45nm_HP.pm
+
+* Power Supply
+Vdd VDD 0 1.0V
+Vss VSS 0 0V
+
+* Input Signals
+VinA A 0 PULSE(0 1.0 0 100p 100p 10n 20n)
+VinB B 0 PULSE(0 1.0 0 100p 100p 20n 40n)
+
+* --- Stage 1: Inverters (Generating A_B and B_B) ---
+* M_Name  Drain  Gate  Source  Bulk   Model  Width   Length
+M1        A_B    A     VDD     VDD    pmos   W=180n  L=45n
+M2        A_B    A     VSS     VSS    nmos   W=90n   L=45n
+M3        B_B    B     VDD     VDD    pmos   W=180n  L=45n
+M4        B_B    B     VSS     VSS    nmos   W=90n   L=45n
+
+* --- Stage 2: XOR Logic Core (Corrected CMOS) ---
+* PMOS Pull-up Network (Series stacks in parallel)
+* Stack 1: (A in series with B_B)
+M5        OUT    A     N1      VDD    pmos   W=360n  L=45n
+M6        N1     B_B   VDD     VDD    pmos   W=360n  L=45n
+
+* Stack 2: (A_B in series with B)
+M7        OUT    A_B   N2      VDD    pmos   W=360n  L=45n
+M8        N2     B     VDD     VDD    pmos   W=360n  L=45n
+
+* NMOS Pull-down Network (Series stacks in parallel)
+* Stack 1: (A in series with B)
+M9        OUT    A     N3      VSS    nmos   W=180n  L=45n
+M10       N3     B     VSS     VSS    nmos   W=180n  L=45n
+
+* Stack 2: (A_B in series with B_B)
+M11       OUT    A_B   N4      VSS    nmos   W=180n  L=45n
+M12       N4     B_B   VSS     VSS    nmos   W=180n  L=45n
+
+* --- Simulation & Analysis ---
+C_load    OUT    0     1fF
+.tran 0 80n
+.end
